@@ -176,7 +176,7 @@ class Parser:
   t_LSPAREN = r'\{'
   t_RSPAREN = r'\}'
   t_EQUALS = r'='
-  t_SEMICOLON = r';'
+  t_SEMICOLON = r'\;'
   
   def t_INDEX(t):
     r'[a-zA-Z_][a-zA-Z0-9_]*'
