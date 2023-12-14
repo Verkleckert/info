@@ -148,8 +148,15 @@ class UIWindow:
   def getLastProgrammAddress(self) -> int:
     return int(len(self.compiled) -1)
 
+class IfStatement:
+  def __init__(self, condition_index, condition, then_statement):
+    self.condition_index = condition_index
+    self.condition = condition
+    self.then_statement = then_statement
 
 class Parser:
+  IfStatement = IfStatement
+        
   compiled = []
   tokens = (
     'NUMBER',
@@ -170,7 +177,7 @@ class Parser:
   t_MINUS = r'-'
   t_TIMES = r'\*'
   t_DIVIDE = r'/'
-  t_IF = r'[IF]'
+  t_IF = r'[if]'
   t_LPAREN = r'\('
   t_RPAREN = r'\)'
   t_LSPAREN = r'\{'
@@ -196,6 +203,15 @@ class Parser:
   
   lexer = lex.lex()
     
+  def p_statement(p):
+    '''
+    expression : term
+               | if_statement
+               | assignment
+    '''
+      
+    p[0] = p[1]
+        
   def p_expression(p):
     '''
     expression : expression PLUS term
@@ -210,7 +226,7 @@ class Parser:
             p[0] = p[1] - p[3]
     else:
         p[0] = p[1]
-
+  
   def p_term(p):
     '''
     term : term TIMES factor
@@ -224,7 +240,7 @@ class Parser:
             p[0] = p[1] / p[3]
     else:
         p[0] = p[1]
-
+  
   def p_factor(p):
     '''
     factor : NUMBER
@@ -243,15 +259,15 @@ class Parser:
     '''
     # p[0] = p[3] 
     p[0] = "SET VAR"
-
+  
   def p_if_statement(p):
     '''
-    if_statement : IF LPAREN expression EQUALS EQUALS NUMBER RPAREN LSPAREN expression RSPAREN
+    if_statement : IF LPAREN INDEX EQUALS EQUALS NUMBER RPAREN LSPAREN expression RSPAREN
     '''
     # if p[3] == p[5]:
     #   p[0] = p[7]
-    p[0] = "IF"
-
+    p[0] = IfStatement(str(p[3]), str(p[6]), str(p[11]))
+  
   # Error rule for syntax errors
   def p_error(p):
     print("Syntax error")
