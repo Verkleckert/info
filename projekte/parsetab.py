@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'DIVIDE EQUALS IF INDEX LPAREN LSPAREN MINUS NUMBER PLUS RPAREN RSPAREN SEMICOLON TIMES\n    expression : term\n               | if_statement\n               | assignment\n    \n    expressions : expressions PLUS term\n                | expressions MINUS term\n                | term\n    \n    term : term TIMES factor\n         | term DIVIDE factor\n         | factor\n    \n    factor : NUMBER\n           | LPAREN expression RPAREN\n    \n    assignment : INDEX EQUALS expression SEMICOLON\n    \n    if_statement : IF LPAREN INDEX EQUALS EQUALS NUMBER RPAREN LSPAREN expression RSPAREN\n    '
+_lr_signature = 'DIVIDE EQUALS IF INDEX LPAREN LSPAREN MINUS NUMBER PLUS RPAREN RSPAREN SEMICOLON TIMES\n    statement : term\n              | if_statement\n              | assignment\n              | expression\n    \n    expression : expression PLUS term\n               | expression MINUS term\n               | term\n    \n    term : term TIMES factor\n         | term DIVIDE factor\n         | factor\n    \n    factor : NUMBER\n           | LPAREN expression RPAREN\n    \n    assignment : INDEX EQUALS expression SEMICOLON\n    \n    if_statement : IF LPAREN INDEX EQUALS EQUALS NUMBER RPAREN LSPAREN expression RSPAREN\n    '
     
-_lr_action_items = {'IF':([0,7,14,25,],[6,6,6,6,]),'INDEX':([0,7,12,14,25,],[8,8,17,8,8,]),'NUMBER':([0,7,10,11,14,22,25,],[9,9,9,9,9,23,9,]),'LPAREN':([0,6,7,10,11,14,25,],[7,12,7,7,7,7,7,]),'$end':([1,2,3,4,5,9,15,16,18,21,27,],[0,-1,-2,-3,-9,-10,-7,-8,-11,-12,-13,]),'RPAREN':([2,3,4,5,9,13,15,16,18,21,23,27,],[-1,-2,-3,-9,-10,18,-7,-8,-11,-12,24,-13,]),'SEMICOLON':([2,3,4,5,9,15,16,18,19,21,27,],[-1,-2,-3,-9,-10,-7,-8,-11,21,-12,-13,]),'RSPAREN':([2,3,4,5,9,15,16,18,21,26,27,],[-1,-2,-3,-9,-10,-7,-8,-11,-12,27,-13,]),'TIMES':([2,5,9,15,16,18,],[10,-9,-10,-7,-8,-11,]),'DIVIDE':([2,5,9,15,16,18,],[11,-9,-10,-7,-8,-11,]),'EQUALS':([8,17,20,],[14,20,22,]),'LSPAREN':([24,],[25,]),}
+_lr_action_items = {'IF':([0,],[7,]),'INDEX':([0,15,],[9,23,]),'NUMBER':([0,8,11,12,13,14,18,28,31,],[10,10,10,10,10,10,10,29,10,]),'LPAREN':([0,7,8,11,12,13,14,18,31,],[8,15,8,8,8,8,8,8,8,]),'$end':([1,2,3,4,5,6,10,19,20,21,22,24,27,33,],[0,-1,-2,-3,-4,-10,-11,-8,-9,-5,-6,-12,-13,-14,]),'TIMES':([2,6,10,17,19,20,21,22,24,],[11,-10,-11,11,-8,-9,11,11,-12,]),'DIVIDE':([2,6,10,17,19,20,21,22,24,],[12,-10,-11,12,-8,-9,12,12,-12,]),'PLUS':([2,5,6,10,16,17,19,20,21,22,24,25,32,],[-7,13,-10,-11,13,-7,-8,-9,-5,-6,-12,13,13,]),'MINUS':([2,5,6,10,16,17,19,20,21,22,24,25,32,],[-7,14,-10,-11,14,-7,-8,-9,-5,-6,-12,14,14,]),'RPAREN':([6,10,16,17,19,20,21,22,24,29,],[-10,-11,24,-7,-8,-9,-5,-6,-12,30,]),'SEMICOLON':([6,10,17,19,20,21,22,24,25,],[-10,-11,-7,-8,-9,-5,-6,-12,27,]),'RSPAREN':([6,10,17,19,20,21,22,24,32,],[-10,-11,-7,-8,-9,-5,-6,-12,33,]),'EQUALS':([9,23,26,],[18,26,28,]),'LSPAREN':([30,],[31,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'expression':([0,7,14,25,],[1,13,19,26,]),'term':([0,7,14,25,],[2,2,2,2,]),'if_statement':([0,7,14,25,],[3,3,3,3,]),'assignment':([0,7,14,25,],[4,4,4,4,]),'factor':([0,7,10,11,14,25,],[5,5,15,16,5,5,]),}
+_lr_goto_items = {'statement':([0,],[1,]),'term':([0,8,13,14,18,31,],[2,17,21,22,17,17,]),'if_statement':([0,],[3,]),'assignment':([0,],[4,]),'expression':([0,8,18,31,],[5,16,25,32,]),'factor':([0,8,11,12,13,14,18,31,],[6,6,19,20,6,6,6,6,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -26,18 +26,19 @@ for _k, _v in _lr_goto_items.items():
        _lr_goto[_x][_k] = _y
 del _lr_goto_items
 _lr_productions = [
-  ("S' -> expression","S'",1,None,None,None),
-  ('expression -> term','expression',1,'p_expression','bonsay_assembly_tool 2.0.py',201),
-  ('expression -> if_statement','expression',1,'p_expression','bonsay_assembly_tool 2.0.py',202),
-  ('expression -> assignment','expression',1,'p_expression','bonsay_assembly_tool 2.0.py',203),
-  ('expressions -> expressions PLUS term','expressions',3,'p_expressions','bonsay_assembly_tool 2.0.py',216),
-  ('expressions -> expressions MINUS term','expressions',3,'p_expressions','bonsay_assembly_tool 2.0.py',217),
-  ('expressions -> term','expressions',1,'p_expressions','bonsay_assembly_tool 2.0.py',218),
-  ('term -> term TIMES factor','term',3,'p_term','bonsay_assembly_tool 2.0.py',231),
-  ('term -> term DIVIDE factor','term',3,'p_term','bonsay_assembly_tool 2.0.py',232),
-  ('term -> factor','term',1,'p_term','bonsay_assembly_tool 2.0.py',233),
-  ('factor -> NUMBER','factor',1,'p_factor','bonsay_assembly_tool 2.0.py',245),
-  ('factor -> LPAREN expression RPAREN','factor',3,'p_factor','bonsay_assembly_tool 2.0.py',246),
-  ('assignment -> INDEX EQUALS expression SEMICOLON','assignment',4,'p_assignment','bonsay_assembly_tool 2.0.py',257),
-  ('if_statement -> IF LPAREN INDEX EQUALS EQUALS NUMBER RPAREN LSPAREN expression RSPAREN','if_statement',10,'p_if_statement','bonsay_assembly_tool 2.0.py',264),
+  ("S' -> statement","S'",1,None,None,None),
+  ('statement -> term','statement',1,'p_statement','bonsay_assembly_tool 2.0.py',208),
+  ('statement -> if_statement','statement',1,'p_statement','bonsay_assembly_tool 2.0.py',209),
+  ('statement -> assignment','statement',1,'p_statement','bonsay_assembly_tool 2.0.py',210),
+  ('statement -> expression','statement',1,'p_statement','bonsay_assembly_tool 2.0.py',211),
+  ('expression -> expression PLUS term','expression',3,'p_expression','bonsay_assembly_tool 2.0.py',218),
+  ('expression -> expression MINUS term','expression',3,'p_expression','bonsay_assembly_tool 2.0.py',219),
+  ('expression -> term','expression',1,'p_expression','bonsay_assembly_tool 2.0.py',220),
+  ('term -> term TIMES factor','term',3,'p_term','bonsay_assembly_tool 2.0.py',233),
+  ('term -> term DIVIDE factor','term',3,'p_term','bonsay_assembly_tool 2.0.py',234),
+  ('term -> factor','term',1,'p_term','bonsay_assembly_tool 2.0.py',235),
+  ('factor -> NUMBER','factor',1,'p_factor','bonsay_assembly_tool 2.0.py',247),
+  ('factor -> LPAREN expression RPAREN','factor',3,'p_factor','bonsay_assembly_tool 2.0.py',248),
+  ('assignment -> INDEX EQUALS expression SEMICOLON','assignment',4,'p_assignment','bonsay_assembly_tool 2.0.py',259),
+  ('if_statement -> IF LPAREN INDEX EQUALS EQUALS NUMBER RPAREN LSPAREN expression RSPAREN','if_statement',10,'p_if_statement','bonsay_assembly_tool 2.0.py',266),
 ]

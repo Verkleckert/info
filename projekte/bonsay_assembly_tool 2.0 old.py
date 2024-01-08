@@ -121,7 +121,7 @@ class UIWindow:
     self.refreshRomList()
 
   def compileButton(self):
-    self.parser.parse(self.text_input.get("1.0", tk.END))
+    self.parser.parseCode(self.text_input.get("1.0", tk.END))
     f = open("C:\\Users\\tim53\Desktop\\bonsai22\\COMPILED.BON", "w")
     for line in self.compiled:
       f.write(line + "\n")
@@ -148,45 +148,140 @@ class UIWindow:
   def getLastProgrammAddress(self) -> int:
     return int(len(self.compiled) -1)
 
-
-
-
+class IfStatement:
+  def __init__(self, condition_index, condition, then_statement):
+    self.condition_index = condition_index
+    self.condition = condition
+    self.then_statement = then_statement
 
 class Parser:
+  IfStatement = IfStatement
+        
+  compiled = []
+  tokens = (
+    'NUMBER',
+    'PLUS',
+    'MINUS',
+    'TIMES',
+    'DIVIDE',
+    'IF',
+    'LPAREN',
+    'RPAREN',
+    'LSPAREN',
+    'RSPAREN',
+    'EQUALS',
+    'INDEX',
+    'SEMICOLON',
+  )
+  t_PLUS = r'\+'
+  t_MINUS = r'-'
+  t_TIMES = r'\*'
+  t_DIVIDE = r'/'
+  t_IF = r'[if]'
+  t_LPAREN = r'\('
+  t_RPAREN = r'\)'
+  t_LSPAREN = r'\{'
+  t_RSPAREN = r'\}'
+  t_EQUALS = r'='
+  t_SEMICOLON = r'\;'
+  
+  def t_INDEX(t):
+    r'[a-zA-Z_][a-zA-Z0-9_]*'
+    t.value = str(t.value)
+    return t
+  
+  def t_NUMBER(t):
+    r'\d+'
+    t.value = int(t.value)
+    return t
+  
+  t_ignore = ' \t\n'
+  
+  def t_error(t):
+    print(f"Illegal character '{t.value[0]}'")
+    t.lexer.skip(1)
+  
+  lexer = lex.lex()
+    
+  def p_statement(p):
+    '''
+    statement : term
+              | if_statement
+              | assignment
+              | expression
+    '''
+      
+    p[0] = p[1]
+        
+  def p_expression(p):
+    '''
+    expression : expression PLUS term
+               | expression MINUS term
+               | term
+    '''
+      
+    if len(p) == 4:
+        if p[2] == '+':
+            p[0] = p[1] + p[3]
+        elif p[2] == '-':
+            p[0] = p[1] - p[3]
+    else:
+        p[0] = p[1]
+  
+  def p_term(p):
+    '''
+    term : term TIMES factor
+         | term DIVIDE factor
+         | factor
+    '''
+    if len(p) == 4:
+        if p[2] == '*':
+            p[0] = p[1] * p[3]
+        elif p[2] == '/':
+            p[0] = p[1] / p[3]
+    else:
+        p[0] = p[1]
+  
+  def p_factor(p):
+    '''
+    factor : NUMBER
+           | LPAREN expression RPAREN
+    '''
+    if len(p) == 4:
+      p[0] = p[2]
+      # p[0] = "Factor (_)"
+    else:
+      p[0] = p[1]
+      # p[0] = "Factor _"
+  
+  def p_assignment(p):
+    '''
+    assignment : INDEX EQUALS expression SEMICOLON
+    '''
+    # p[0] = p[3] 
+    p[0] = "SET VAR"
+  
+  def p_if_statement(p):
+    '''
+    if_statement : IF LPAREN INDEX EQUALS EQUALS NUMBER RPAREN LSPAREN expression RSPAREN
+    '''
+    # if p[3] == p[5]:
+    #   p[0] = p[7]
+    p[0] = IfStatement(str(p[3]), str(p[6]), str(p[11]))
+  
+  # Error rule for syntax errors
+  def p_error(p):
+    print("Syntax error")
+    
+  parserYacc = yacc.yacc()
+
   def __init__(self) -> None:
-    self.variables = {}
-    self.code = ""
     pass
   
-  def parse(self, inputCode):
-    self.code = inputCode
-    print(self.code)
-    self.removeComments()
-    result = "NONE"
+  def parseCode(self, inputCode):
+    print(inputCode)
+    result = self.parserYacc.parse(inputCode)
     print(f"Result: {result}")
-    
-  def removeComments(self):
-    code = self.code.splitlines()
-    print (code)
-    for line_number, line in enumerate(self.code):
-      index_of_non_space = next((i for i, char in enumerate(line) if not char.isspace()), None)
-      if index_of_non_space is not None and line[index_of_non_space] == "#":
-        self.code = self.delete_line(line_number)
-    print(self.code)
-  
-  def delete_line(self, line_number):
-    lines = self.code.split('\n')
-
-    if 0 <= line_number < len(lines):
-        del lines[line_number]
-
-    output = '\n'.join(lines)
-    self.code = output
-  
-  def getVariables(self, inputCode):
-    lines = inputCode.split("\n")
-    for line in lines:
-      pass
   
   def parseRomIndexes():
     pass

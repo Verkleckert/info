@@ -1,0 +1,459 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Grammar
+
+Rule 0     S' -> statement
+Rule 1     statement -> term
+Rule 2     statement -> if_statement
+Rule 3     statement -> assignment
+Rule 4     statement -> expression
+Rule 5     expression -> expression PLUS term
+Rule 6     expression -> expression MINUS term
+Rule 7     expression -> term
+Rule 8     term -> term TIMES factor
+Rule 9     term -> term DIVIDE factor
+Rule 10    term -> factor
+Rule 11    factor -> NUMBER
+Rule 12    factor -> LPAREN expression RPAREN
+Rule 13    assignment -> INDEX EQUALS expression SEMICOLON
+Rule 14    if_statement -> IF LPAREN INDEX EQUALS EQUALS NUMBER RPAREN LSPAREN expression RSPAREN
+
+Terminals, with rules where they appear
+
+DIVIDE               : 9
+EQUALS               : 13 14 14
+IF                   : 14
+INDEX                : 13 14
+LPAREN               : 12 14
+LSPAREN              : 14
+MINUS                : 6
+NUMBER               : 11 14
+PLUS                 : 5
+RPAREN               : 12 14
+RSPAREN              : 14
+SEMICOLON            : 13
+TIMES                : 8
+error                : 
+
+Nonterminals, with rules where they appear
+
+assignment           : 3
+expression           : 4 5 6 12 13 14
+factor               : 8 9 10
+if_statement         : 2
+statement            : 0
+term                 : 1 5 6 7 8 9
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . statement
+    (1) statement -> . term
+    (2) statement -> . if_statement
+    (3) statement -> . assignment
+    (4) statement -> . expression
+    (8) term -> . term TIMES factor
+    (9) term -> . term DIVIDE factor
+    (10) term -> . factor
+    (14) if_statement -> . IF LPAREN INDEX EQUALS EQUALS NUMBER RPAREN LSPAREN expression RSPAREN
+    (13) assignment -> . INDEX EQUALS expression SEMICOLON
+    (5) expression -> . expression PLUS term
+    (6) expression -> . expression MINUS term
+    (7) expression -> . term
+    (11) factor -> . NUMBER
+    (12) factor -> . LPAREN expression RPAREN
+
+    IF              shift and go to state 7
+    INDEX           shift and go to state 9
+    NUMBER          shift and go to state 10
+    LPAREN          shift and go to state 8
+
+    statement                      shift and go to state 1
+    term                           shift and go to state 2
+    if_statement                   shift and go to state 3
+    assignment                     shift and go to state 4
+    expression                     shift and go to state 5
+    factor                         shift and go to state 6
+
+state 1
+
+    (0) S' -> statement .
+
+
+
+state 2
+
+    (1) statement -> term .
+    (8) term -> term . TIMES factor
+    (9) term -> term . DIVIDE factor
+    (7) expression -> term .
+
+  ! reduce/reduce conflict for $end resolved using rule 1 (statement -> term .)
+    $end            reduce using rule 1 (statement -> term .)
+    TIMES           shift and go to state 11
+    DIVIDE          shift and go to state 12
+    PLUS            reduce using rule 7 (expression -> term .)
+    MINUS           reduce using rule 7 (expression -> term .)
+
+  ! $end            [ reduce using rule 7 (expression -> term .) ]
+
+
+state 3
+
+    (2) statement -> if_statement .
+
+    $end            reduce using rule 2 (statement -> if_statement .)
+
+
+state 4
+
+    (3) statement -> assignment .
+
+    $end            reduce using rule 3 (statement -> assignment .)
+
+
+state 5
+
+    (4) statement -> expression .
+    (5) expression -> expression . PLUS term
+    (6) expression -> expression . MINUS term
+
+    $end            reduce using rule 4 (statement -> expression .)
+    PLUS            shift and go to state 13
+    MINUS           shift and go to state 14
+
+
+state 6
+
+    (10) term -> factor .
+
+    TIMES           reduce using rule 10 (term -> factor .)
+    DIVIDE          reduce using rule 10 (term -> factor .)
+    $end            reduce using rule 10 (term -> factor .)
+    PLUS            reduce using rule 10 (term -> factor .)
+    MINUS           reduce using rule 10 (term -> factor .)
+    RPAREN          reduce using rule 10 (term -> factor .)
+    SEMICOLON       reduce using rule 10 (term -> factor .)
+    RSPAREN         reduce using rule 10 (term -> factor .)
+
+
+state 7
+
+    (14) if_statement -> IF . LPAREN INDEX EQUALS EQUALS NUMBER RPAREN LSPAREN expression RSPAREN
+
+    LPAREN          shift and go to state 15
+
+
+state 8
+
+    (12) factor -> LPAREN . expression RPAREN
+    (5) expression -> . expression PLUS term
+    (6) expression -> . expression MINUS term
+    (7) expression -> . term
+    (8) term -> . term TIMES factor
+    (9) term -> . term DIVIDE factor
+    (10) term -> . factor
+    (11) factor -> . NUMBER
+    (12) factor -> . LPAREN expression RPAREN
+
+    NUMBER          shift and go to state 10
+    LPAREN          shift and go to state 8
+
+    expression                     shift and go to state 16
+    term                           shift and go to state 17
+    factor                         shift and go to state 6
+
+state 9
+
+    (13) assignment -> INDEX . EQUALS expression SEMICOLON
+
+    EQUALS          shift and go to state 18
+
+
+state 10
+
+    (11) factor -> NUMBER .
+
+    TIMES           reduce using rule 11 (factor -> NUMBER .)
+    DIVIDE          reduce using rule 11 (factor -> NUMBER .)
+    $end            reduce using rule 11 (factor -> NUMBER .)
+    PLUS            reduce using rule 11 (factor -> NUMBER .)
+    MINUS           reduce using rule 11 (factor -> NUMBER .)
+    RPAREN          reduce using rule 11 (factor -> NUMBER .)
+    SEMICOLON       reduce using rule 11 (factor -> NUMBER .)
+    RSPAREN         reduce using rule 11 (factor -> NUMBER .)
+
+
+state 11
+
+    (8) term -> term TIMES . factor
+    (11) factor -> . NUMBER
+    (12) factor -> . LPAREN expression RPAREN
+
+    NUMBER          shift and go to state 10
+    LPAREN          shift and go to state 8
+
+    factor                         shift and go to state 19
+
+state 12
+
+    (9) term -> term DIVIDE . factor
+    (11) factor -> . NUMBER
+    (12) factor -> . LPAREN expression RPAREN
+
+    NUMBER          shift and go to state 10
+    LPAREN          shift and go to state 8
+
+    factor                         shift and go to state 20
+
+state 13
+
+    (5) expression -> expression PLUS . term
+    (8) term -> . term TIMES factor
+    (9) term -> . term DIVIDE factor
+    (10) term -> . factor
+    (11) factor -> . NUMBER
+    (12) factor -> . LPAREN expression RPAREN
+
+    NUMBER          shift and go to state 10
+    LPAREN          shift and go to state 8
+
+    term                           shift and go to state 21
+    factor                         shift and go to state 6
+
+state 14
+
+    (6) expression -> expression MINUS . term
+    (8) term -> . term TIMES factor
+    (9) term -> . term DIVIDE factor
+    (10) term -> . factor
+    (11) factor -> . NUMBER
+    (12) factor -> . LPAREN expression RPAREN
+
+    NUMBER          shift and go to state 10
+    LPAREN          shift and go to state 8
+
+    term                           shift and go to state 22
+    factor                         shift and go to state 6
+
+state 15
+
+    (14) if_statement -> IF LPAREN . INDEX EQUALS EQUALS NUMBER RPAREN LSPAREN expression RSPAREN
+
+    INDEX           shift and go to state 23
+
+
+state 16
+
+    (12) factor -> LPAREN expression . RPAREN
+    (5) expression -> expression . PLUS term
+    (6) expression -> expression . MINUS term
+
+    RPAREN          shift and go to state 24
+    PLUS            shift and go to state 13
+    MINUS           shift and go to state 14
+
+
+state 17
+
+    (7) expression -> term .
+    (8) term -> term . TIMES factor
+    (9) term -> term . DIVIDE factor
+
+    RPAREN          reduce using rule 7 (expression -> term .)
+    PLUS            reduce using rule 7 (expression -> term .)
+    MINUS           reduce using rule 7 (expression -> term .)
+    SEMICOLON       reduce using rule 7 (expression -> term .)
+    RSPAREN         reduce using rule 7 (expression -> term .)
+    TIMES           shift and go to state 11
+    DIVIDE          shift and go to state 12
+
+
+state 18
+
+    (13) assignment -> INDEX EQUALS . expression SEMICOLON
+    (5) expression -> . expression PLUS term
+    (6) expression -> . expression MINUS term
+    (7) expression -> . term
+    (8) term -> . term TIMES factor
+    (9) term -> . term DIVIDE factor
+    (10) term -> . factor
+    (11) factor -> . NUMBER
+    (12) factor -> . LPAREN expression RPAREN
+
+    NUMBER          shift and go to state 10
+    LPAREN          shift and go to state 8
+
+    expression                     shift and go to state 25
+    term                           shift and go to state 17
+    factor                         shift and go to state 6
+
+state 19
+
+    (8) term -> term TIMES factor .
+
+    TIMES           reduce using rule 8 (term -> term TIMES factor .)
+    DIVIDE          reduce using rule 8 (term -> term TIMES factor .)
+    $end            reduce using rule 8 (term -> term TIMES factor .)
+    PLUS            reduce using rule 8 (term -> term TIMES factor .)
+    MINUS           reduce using rule 8 (term -> term TIMES factor .)
+    RPAREN          reduce using rule 8 (term -> term TIMES factor .)
+    SEMICOLON       reduce using rule 8 (term -> term TIMES factor .)
+    RSPAREN         reduce using rule 8 (term -> term TIMES factor .)
+
+
+state 20
+
+    (9) term -> term DIVIDE factor .
+
+    TIMES           reduce using rule 9 (term -> term DIVIDE factor .)
+    DIVIDE          reduce using rule 9 (term -> term DIVIDE factor .)
+    $end            reduce using rule 9 (term -> term DIVIDE factor .)
+    PLUS            reduce using rule 9 (term -> term DIVIDE factor .)
+    MINUS           reduce using rule 9 (term -> term DIVIDE factor .)
+    RPAREN          reduce using rule 9 (term -> term DIVIDE factor .)
+    SEMICOLON       reduce using rule 9 (term -> term DIVIDE factor .)
+    RSPAREN         reduce using rule 9 (term -> term DIVIDE factor .)
+
+
+state 21
+
+    (5) expression -> expression PLUS term .
+    (8) term -> term . TIMES factor
+    (9) term -> term . DIVIDE factor
+
+    PLUS            reduce using rule 5 (expression -> expression PLUS term .)
+    MINUS           reduce using rule 5 (expression -> expression PLUS term .)
+    $end            reduce using rule 5 (expression -> expression PLUS term .)
+    RPAREN          reduce using rule 5 (expression -> expression PLUS term .)
+    SEMICOLON       reduce using rule 5 (expression -> expression PLUS term .)
+    RSPAREN         reduce using rule 5 (expression -> expression PLUS term .)
+    TIMES           shift and go to state 11
+    DIVIDE          shift and go to state 12
+
+
+state 22
+
+    (6) expression -> expression MINUS term .
+    (8) term -> term . TIMES factor
+    (9) term -> term . DIVIDE factor
+
+    PLUS            reduce using rule 6 (expression -> expression MINUS term .)
+    MINUS           reduce using rule 6 (expression -> expression MINUS term .)
+    $end            reduce using rule 6 (expression -> expression MINUS term .)
+    RPAREN          reduce using rule 6 (expression -> expression MINUS term .)
+    SEMICOLON       reduce using rule 6 (expression -> expression MINUS term .)
+    RSPAREN         reduce using rule 6 (expression -> expression MINUS term .)
+    TIMES           shift and go to state 11
+    DIVIDE          shift and go to state 12
+
+
+state 23
+
+    (14) if_statement -> IF LPAREN INDEX . EQUALS EQUALS NUMBER RPAREN LSPAREN expression RSPAREN
+
+    EQUALS          shift and go to state 26
+
+
+state 24
+
+    (12) factor -> LPAREN expression RPAREN .
+
+    TIMES           reduce using rule 12 (factor -> LPAREN expression RPAREN .)
+    DIVIDE          reduce using rule 12 (factor -> LPAREN expression RPAREN .)
+    $end            reduce using rule 12 (factor -> LPAREN expression RPAREN .)
+    PLUS            reduce using rule 12 (factor -> LPAREN expression RPAREN .)
+    MINUS           reduce using rule 12 (factor -> LPAREN expression RPAREN .)
+    RPAREN          reduce using rule 12 (factor -> LPAREN expression RPAREN .)
+    SEMICOLON       reduce using rule 12 (factor -> LPAREN expression RPAREN .)
+    RSPAREN         reduce using rule 12 (factor -> LPAREN expression RPAREN .)
+
+
+state 25
+
+    (13) assignment -> INDEX EQUALS expression . SEMICOLON
+    (5) expression -> expression . PLUS term
+    (6) expression -> expression . MINUS term
+
+    SEMICOLON       shift and go to state 27
+    PLUS            shift and go to state 13
+    MINUS           shift and go to state 14
+
+
+state 26
+
+    (14) if_statement -> IF LPAREN INDEX EQUALS . EQUALS NUMBER RPAREN LSPAREN expression RSPAREN
+
+    EQUALS          shift and go to state 28
+
+
+state 27
+
+    (13) assignment -> INDEX EQUALS expression SEMICOLON .
+
+    $end            reduce using rule 13 (assignment -> INDEX EQUALS expression SEMICOLON .)
+
+
+state 28
+
+    (14) if_statement -> IF LPAREN INDEX EQUALS EQUALS . NUMBER RPAREN LSPAREN expression RSPAREN
+
+    NUMBER          shift and go to state 29
+
+
+state 29
+
+    (14) if_statement -> IF LPAREN INDEX EQUALS EQUALS NUMBER . RPAREN LSPAREN expression RSPAREN
+
+    RPAREN          shift and go to state 30
+
+
+state 30
+
+    (14) if_statement -> IF LPAREN INDEX EQUALS EQUALS NUMBER RPAREN . LSPAREN expression RSPAREN
+
+    LSPAREN         shift and go to state 31
+
+
+state 31
+
+    (14) if_statement -> IF LPAREN INDEX EQUALS EQUALS NUMBER RPAREN LSPAREN . expression RSPAREN
+    (5) expression -> . expression PLUS term
+    (6) expression -> . expression MINUS term
+    (7) expression -> . term
+    (8) term -> . term TIMES factor
+    (9) term -> . term DIVIDE factor
+    (10) term -> . factor
+    (11) factor -> . NUMBER
+    (12) factor -> . LPAREN expression RPAREN
+
+    NUMBER          shift and go to state 10
+    LPAREN          shift and go to state 8
+
+    expression                     shift and go to state 32
+    term                           shift and go to state 17
+    factor                         shift and go to state 6
+
+state 32
+
+    (14) if_statement -> IF LPAREN INDEX EQUALS EQUALS NUMBER RPAREN LSPAREN expression . RSPAREN
+    (5) expression -> expression . PLUS term
+    (6) expression -> expression . MINUS term
+
+    RSPAREN         shift and go to state 33
+    PLUS            shift and go to state 13
+    MINUS           shift and go to state 14
+
+
+state 33
+
+    (14) if_statement -> IF LPAREN INDEX EQUALS EQUALS NUMBER RPAREN LSPAREN expression RSPAREN .
+
+    $end            reduce using rule 14 (if_statement -> IF LPAREN INDEX EQUALS EQUALS NUMBER RPAREN LSPAREN expression RSPAREN .)
+
+WARNING: 
+WARNING: Conflicts:
+WARNING: 
+WARNING: reduce/reduce conflict in state 2 resolved using rule (statement -> term)
+WARNING: rejected rule (expression -> term) in state 2
