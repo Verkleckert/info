@@ -36,6 +36,10 @@ def detect_win() -> str | None:
     return game[0]
   if (game[2] == game[4] == game[6]) and game[2] != None:
     return game[2]
+  
+  # Tie
+  if all(cell is not None for cell in game):
+    return "Tie"
 
 def get_current_player() -> str:
   return current_player
@@ -55,12 +59,13 @@ def print_game():
   print("└───┴───┴───┘")
   
 def change_player():
+  global current_player
   if (current_player == "X" ):
     current_player = "O"
   elif (current_player == "O" ):
     current_player = "X"
   
-def run():
+def run(algorithm):
   while( not detect_win()):
     print_game()
     if (current_player == "X" ):
@@ -69,16 +74,81 @@ def run():
         input_ = int(input("Player X: ")) - 1
 
     if (current_player == "O" ):
-      input_ = int(input("Player O: ")) - 1
-      while not place_o_at(input_):
+      if algorithm:
+        input_ = algorithm_move()
+        while not place_o_at(input_):
+          input_ = algorithm_move()
+      else:
         input_ = int(input("Player O: ")) - 1
+        while not place_o_at(input_):
+          input_ = int(input("Player O: ")) - 1
     change_player()
   print_game()
-  print(f"{game.detect_win()} wins.")
+  print(f"{detect_win()} wins.")
 
+
+def is_winner(board, player):
+    # Check for a win across rows, columns, and diagonals
+    winning_combinations = [(0, 1, 2), (3, 4, 5), (6, 7, 8),
+                            (0, 3, 6), (1, 4, 7), (2, 5, 8),
+                            (0, 4, 8), (2, 4, 6)]
+
+    for combo in winning_combinations:
+        if all(board[i] == player for i in combo):
+            return True
+    return False
+
+def is_board_full(board):
+    # Check if the board is full
+    return all(cell is not None for cell in board)
+
+def minimax(depth, maximizing_player):
+    # Terminal conditions
+    winner = detect_win()
+    if winner == 'O':
+        return -1
+    elif winner == 'X':
+        return 1
+    elif is_board_full(game):
+        return 0
+
+    if maximizing_player:
+        max_eval = float('-inf')
+        for i in range(9):
+            if game[i] is None:
+                game[i] = 'X'
+                eval = minimax(depth + 1, False)
+                game[i] = None
+                max_eval = max(max_eval, eval)
+        return max_eval
+    else:
+        min_eval = float('inf')
+        for i in range(9):
+            if game[i] is None:
+                game[i] = 'O'
+                eval = minimax(depth + 1, True)
+                game[i] = None
+                min_eval = min(min_eval, eval)
+        return min_eval
+
+def algorithm_move():
+    best_move = -1
+    best_eval = float('-inf')
+
+    for i in range(9):
+        if game[i] is None:
+            game[i] = 'X'
+            eval = minimax(0, False)
+            game[i] = None
+
+            if eval > best_eval:
+                best_eval = eval
+                best_move = i
+
+    return best_move
 
 if __name__ == "__main__":
   # 1 2 3
   # 4 5 6
-  # 7 8 9
-  run()
+  # 7 8 9  
+  run(1)
